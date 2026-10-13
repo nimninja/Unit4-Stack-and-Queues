@@ -1,34 +1,41 @@
+import java.util.Objects;
+
 public class ArrayStack<T> implements Stack<T> {
     private T[] items;
     private int n;
 
     @SuppressWarnings("unchecked")
     public ArrayStack() {
-        items = (T[]) new Object[1];
+        items = (T[]) new Object[1000];
         n = 0;
     }
 
     @Override
     public void push(T item) {
         // TODO: If the array is full, double its capacity; then store item at index n and increment n.
+        items[n++] = item;
     }
 
     @Override
     public T pop() {
         // TODO: Decrement n, save and return that item, and set the popped slot to null to avoid loitering.
-        return null;
+        if (n <=0) {return null;}
+        n--;
+        T ret = items[n];
+        items[n] = null;
+        return ret;
     }
 
     @Override
     public boolean isEmpty() {
         // TODO: Return true when n is zero.
-        return false;
+        return n == 0;
     }
 
     @Override
     public int size() {
         // TODO: Return the number of items currently in the stack.
-        return 0;
+        return n;
     }
 
     /**
@@ -39,7 +46,17 @@ public class ArrayStack<T> implements Stack<T> {
     public static boolean isValid(String s) {
         // TODO: Use an ArrayStack<Character> to check matching brackets. Push opening brackets;
         // for each closer, check that the most recent opener has the matching type.
-        return false;
+        String[] strings = s.split(",");
+        ArrayStack<String> stack = new ArrayStack<String>();
+        for (int i = 0; i < strings.length; i++) {
+            if (Objects.equals(strings[i], "(") || Objects.equals(strings[i], "[") || Objects.equals(strings[i], "{")) {
+                stack.push(strings[i].substring(1,2));
+            }
+            else {
+                if (!Objects.equals(stack.pop(), strings[i])) {return false;}
+            }
+        }
+        return true;
     }
 
     static void check(String label, Object actual, Object expected) {
