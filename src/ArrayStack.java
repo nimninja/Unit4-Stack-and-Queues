@@ -48,15 +48,22 @@ public class ArrayStack<T> implements Stack<T> {
         // for each closer, check that the most recent opener has the matching type.
         String[] strings = s.split(",");
         ArrayStack<String> stack = new ArrayStack<String>();
-        for (int i = 0; i < strings.length; i++) {
-            if (Objects.equals(strings[i], "(") || Objects.equals(strings[i], "[") || Objects.equals(strings[i], "{")) {
-                stack.push(strings[i].substring(1,2));
+        for (int i = 0; i < s.length(); i++) {
+            String c = s.substring(i,i+1);
+            if (c.equals("(")|| c.equals("[")|| c.equals("{")) {
+                stack.push(c);
             }
             else {
-                if (!Objects.equals(stack.pop(), strings[i])) {return false;}
+                if (stack.isEmpty()) {return false;}
+                String open = stack.pop();
+                if (c.equals(")") && !open.equals("(")) {return false;}
+                if (c.equals("]") && !open.equals("[")) {return false;}
+                if (c.equals("}") && !open.equals("{")) {return false;}
             }
+
+
         }
-        return true;
+        return stack.isEmpty();
     }
 
     static void check(String label, Object actual, Object expected) {

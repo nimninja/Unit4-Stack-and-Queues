@@ -16,28 +16,34 @@ public class LinkedListStack<T> implements Stack<T> {
     public void push(T item) {
         // TODO: Create a node, link it to the old first node, and make it the new first node.
         Node oldf = first;
-        Node n = new Node();
-        n.next=first.next;
-        first.next=null;
+        Node ne = new Node();
+        ne.item = item;
+        ne.next = oldf;
+        first=ne;
+        n++;
 
     }
 
     @Override
     public T pop() {
         // TODO: Save the first item's value, move first to first.next, and return the saved value.
-        return null;
+        if (isEmpty()) {return null;}
+        T ret = first.item;
+        first = first.next;
+        n--;
+        return ret;
     }
 
     @Override
     public boolean isEmpty() {
         // TODO: Return true when the first node is null.
-        return false;
+        return first == null;
     }
 
     @Override
     public int size() {
         // TODO: Return the number of items currently in the stack.
-        return 0;
+        return n;
     }
 
     /**
@@ -47,7 +53,30 @@ public class LinkedListStack<T> implements Stack<T> {
     public static int evalRPN(String[] tokens) {
         // TODO: Use a LinkedListStack<Integer> to evaluate the tokens. For an operator,
         // pop the right operand first, then the left operand; apply the operator and push the result.
-        return 0;
+        LinkedListStack<Integer> stack = new LinkedListStack<>();
+
+        for (String token : tokens) {
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int right = stack.pop();
+                int left = stack.pop();
+
+                if (token.equals("+")) {
+                    stack.push(left+right);
+                } else if (token.equals("-")) {
+                    stack.push(left - right);
+                } else if (token.equals("*")) {
+                    stack.push(left*right);
+                } else {
+                    stack.push(left /right);
+                }
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+
+
+        }
+
+        return stack.pop();
     }
 
     static void check(String label, Object actual, Object expected) {
